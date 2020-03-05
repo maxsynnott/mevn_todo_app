@@ -13,7 +13,7 @@ app.get('/tasks', (req, res) => {
   res.send(
     [{
       title: "Hello World!",
-      description: "Hi there! How are you?"
+      checked: false
     }]
   )
 })
