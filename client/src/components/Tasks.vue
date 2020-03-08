@@ -36,8 +36,8 @@ export default {
   },
   methods: {
     async getTasks () {
-      const reponse = await TasksService.fetchTasks()
-      this.tasks = reponse.data
+      const response = await TasksService.fetchTasks()
+      this.tasks = response.data.tasks
     }
   }
 }
