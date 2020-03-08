@@ -21,7 +21,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.get('/tasks', (req, res) => {
-  Task.find({}, 'title checked', function(error, tasks) {
+  Task.find({}, 'title checked', (error, tasks) => {
   	if (error) {
   		console.log(error)
 
@@ -34,6 +34,35 @@ app.get('/tasks', (req, res) => {
   }).sort({_id:-1})
 })
 
+app.get('/task/:id', (req, res) => {
+	Task.findById(req.params.id, 'title checked', (error, task) => {
+		if (error) { console.log(error) }
+
+		res.send(task)
+	})
+})
+
+app.put('/task/:id', (req, res) => {
+	var db = req.db;
+
+	Task.findById(req.params.id, 'title checked', function (error, task) {
+	  if (error) { console.error(error); }
+
+	  task.title = req.body.title
+	  task.checked = req.body.checked
+
+	  task.save(function (error) {
+	    if (error) {
+	      console.log(error)
+	    }
+	    
+	    res.send({
+	      success: true
+	    })
+	  })
+	})
+})
+
 app.post('/tasks', (req, res) => {
 	var db = req.db;
 	var title = req.body.title;
@@ -44,7 +73,7 @@ app.post('/tasks', (req, res) => {
 		checked: checked
 	})
 
-	new_task.save(function (error) {
+	new_task.save((error) => {
 		if (error) {
 			console.log(error);
 
