@@ -10,10 +10,14 @@ export default {
 	},
 
 	getTask (params) {
-		return Api().get(`task/${params.id}`)
+		return Api().get(`tasks/${params.id}`)
 	},
 
 	updateTask (params) {
-		return Api().put('task/' + params.id, params)
-	}
+		return Api().put(`tasks/${params.id}`, params)
+	},
+
+	deleteTask (id) {
+    return Api().delete(`tasks/${id}`)
+  }
 }

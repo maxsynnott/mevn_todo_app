@@ -34,7 +34,7 @@ app.get('/tasks', (req, res) => {
   }).sort({_id:-1})
 })
 
-app.get('/task/:id', (req, res) => {
+app.get('/tasks/:id', (req, res) => {
 	Task.findById(req.params.id, 'title checked', (error, task) => {
 		if (error) { console.log(error) }
 
@@ -42,7 +42,7 @@ app.get('/task/:id', (req, res) => {
 	})
 })
 
-app.put('/task/:id', (req, res) => {
+app.put('/tasks/:id', (req, res) => {
 	var db = req.db;
 
 	Task.findById(req.params.id, 'title checked', function (error, task) {
@@ -88,6 +88,17 @@ app.post('/tasks', (req, res) => {
 			})
 		}
 	})
+})
+
+app.delete('/tasks/:id', (req, res) => {
+  var db = req.db;
+  Task.remove({ _id: req.params.id }, (err, task) => {
+    if (err) { res.send(err) }
+
+    res.send({
+      success: true
+    })
+  })
 })
 
 
