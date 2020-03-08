@@ -1,3 +1,14 @@
+// MONGOOSE
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/tasks');
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error"));
+db.once("open", function(callback){
+  console.log("Connection Succeeded");
+});
+
+var Task = require("../models/task");
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -10,12 +21,44 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.get('/tasks', (req, res) => {
-  res.send(
-    [{
-      title: "Hello World!",
-      checked: false
-    }]
-  )
+  Task.find({}, 'title checked', function(error, tasks) {
+  	if (error) {
+  		console.log(error)
+
+  		res.send('Error encountered')
+  	} else {
+  		res.send({
+  			tasks: tasks
+  		})
+  	}
+  }).sort({_id:-1})
+})
+
+app.post('/tasks', (req, res) => {
+	var db = req.db;
+	var title = req.body.title;
+	var checked = req.body.checked;
+
+	var new_task = new Task({
+		title: title,
+		checked: checked
+	})
+
+	new_task.save(function (error) {
+		if (error) {
+			console.log(error);
+
+			res.send({
+				success: false,
+				message: 'Task saved unsuccessfully'
+			})
+		} else {
+			res.send({
+				success: true,
+				message: 'Task saved successfully!'
+			})
+		}
+	})
 })
 
 
