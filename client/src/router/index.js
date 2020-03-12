@@ -29,9 +29,6 @@ export default new Router({
       path: '/tasks/:id',
       name: 'EditTask',
       component: EditTask
-
-
-      
     }
   ]
 })
